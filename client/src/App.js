@@ -3,6 +3,9 @@ import { Box, Button, Image, Layer, Text, TextInput } from "grommet"
 // import NFTPhotocopierContract from "./contracts/NFTPhotocopier.json"
 // import getWeb3 from "./getWeb3"
 
+const boredApeUrl =
+  "https://opensea.io/assets/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/1"
+
 const Modal = ({ setShowMintingModal, tokenData, mintToken }) => {
   return (
     <Layer
@@ -97,7 +100,7 @@ export const App = () => {
         </Text>
         <Text margin={"medium"}>Enter the Opensea url for the NFT below:</Text>
         <TextInput
-          placeholder="https://opensea.io/assets/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb/1"
+          placeholder={boredApeUrl}
           value={openseaUrl}
           onChange={(event) => setOpenseaUrl(event.target.value)}
           margin={"medium"}

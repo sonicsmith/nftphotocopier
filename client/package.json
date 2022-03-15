@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@truffle/hdwallet-provider": "^2.0.4",
     "dotenv": "^16.0.0",
     "grommet": "^2.21.0",
     "polished": "^4.1.4",
@@ -16,7 +17,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "netlify functions:serve"
   },
   "eslintConfig": {
     "extends": "react-app"
