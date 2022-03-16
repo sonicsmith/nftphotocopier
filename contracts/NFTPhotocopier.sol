@@ -230,7 +230,7 @@ contract NFTPhotocopier is ERC721, ContextMixin, NativeMetaTransaction, Ownable 
 
     mapping (uint256 => string) private _tokenURIs;
 
-    uint256 COPY_PRICE = 3 ether;
+    uint256 COPY_PRICE = 5 ether;
 
     constructor () ERC721("NFTPhotocopier", "NFTP") {
         _initializeEIP712("NFTPhotocopier");
@@ -280,7 +280,7 @@ contract NFTPhotocopier is ERC721, ContextMixin, NativeMetaTransaction, Ownable 
 
         require(msg.value >= COPY_PRICE);
 
-        for (uint i = 0; i <= _tokenIds.current(); i++) {
+        for (uint i = 1; i < _tokenIds.current(); i++) {
             string memory existingURI = tokenURI(i);
             if (compareStrings(originalURI, existingURI)) {
                 revert("Copy already exists");

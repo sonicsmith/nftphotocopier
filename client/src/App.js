@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { Box, Button, Image, Layer, Text, TextInput } from "grommet"
+import { Loading } from "./Loading"
 // import NFTPhotocopierContract from "./contracts/NFTPhotocopier.json"
 // import getWeb3 from "./getWeb3"
 
@@ -11,6 +12,7 @@ const Modal = ({ setShowMintingModal, tokenData, mintToken }) => {
     <Layer
       onEsc={() => setShowMintingModal(false)}
       onClickOutside={() => setShowMintingModal(false)}
+      background={{ opacity: false }}
     >
       <Box
         pad={"small"}
@@ -18,21 +20,25 @@ const Modal = ({ setShowMintingModal, tokenData, mintToken }) => {
         border={{ size: "small" }}
         background="dark-2"
       >
-        {tokenData && (
-          <Box justify="center" align="center">
-            <Text size={"3xl"} margin={"medium"}>
-              {tokenData.title}
-            </Text>
-            <Box padding={"medium"}>
-              <Image fit="cover" src={tokenData.image} />
-            </Box>
-          </Box>
-        )}
+        <Box justify="center" align="center">
+          {tokenData ? (
+            <>
+              <Text size={"3xl"} margin={"medium"}>
+                {tokenData.title}
+              </Text>
+              <Box padding={"medium"}>
+                <Image fit="cover" src={tokenData.image} />
+              </Box>
+            </>
+          ) : (
+            <Loading />
+          )}
+        </Box>
         <Box direction="row" justify="center" pad={"small"}>
           <Button
             primary
             label="Photocopy"
-            onClick={mintToken}
+            // onClick={mintToken}
             margin={"small"}
           />
           <Button
@@ -48,7 +54,7 @@ const Modal = ({ setShowMintingModal, tokenData, mintToken }) => {
 }
 
 export const App = () => {
-  const [openseaUrl, setOpenseaUrl] = useState("")
+  const [openseaUrl, setOpenseaUrl] = useState(boredApeUrl)
   const [showMintingModal, setShowMintingModal] = useState(false)
   const [tokenData, setTokenData] = useState()
 
@@ -98,7 +104,11 @@ export const App = () => {
         <Text size={"4xl"} margin={"medium"}>
           NFT Photocopier
         </Text>
-        <Text margin={"medium"}>Enter the Opensea url for the NFT below:</Text>
+        <Text>Create your own bootleg NFT on Polygon for 5 MATIC</Text>
+        <Text>Once an NFT is photocopied here, it can not be copied again</Text>
+        <Text margin={"small"}>
+          Enter the Opensea url for any Ethereum NFT below:
+        </Text>
         <TextInput
           placeholder={boredApeUrl}
           value={openseaUrl}

@@ -11,11 +11,9 @@ const getTokenURI = ({ contractAddress, tokenId }) => {
     providerOrUrl: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
   })
   const web3Instance = new Web3(provider)
-  console.log("Creating contract instance", contractAddress)
   const contract = new web3Instance.eth.Contract(abi, contractAddress, {
     gasLimit: "1000000",
   })
-  console.log("Getting tokenURI", contract)
   return contract.methods.tokenURI(tokenId).call()
 }
 
@@ -30,8 +28,7 @@ const handler = async (event) => {
       body: JSON.stringify({ tokenURI }),
     }
   } catch (error) {
-    console.log(error)
-    return { statusCode: 500, body: error.toString() }
+    return { statusCode: 500, body: { error: error.toString() } }
   }
 }
 
