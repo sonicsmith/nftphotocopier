@@ -1,57 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Box, Button, Image, Layer, Text, TextInput } from "grommet"
-import { Loading } from "./Loading"
+import { Box, Button, Text, TextInput } from "grommet"
+import PreviewModal from "./components/PreviewModal"
 // import NFTPhotocopierContract from "./contracts/NFTPhotocopier.json"
 // import getWeb3 from "./getWeb3"
 
 const boredApeUrl =
   "https://opensea.io/assets/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/1"
-
-const Modal = ({ setShowMintingModal, tokenData, mintToken }) => {
-  return (
-    <Layer
-      onEsc={() => setShowMintingModal(false)}
-      onClickOutside={() => setShowMintingModal(false)}
-      background={{ opacity: false }}
-    >
-      <Box
-        pad={"small"}
-        round={true}
-        border={{ size: "small" }}
-        background="dark-2"
-      >
-        <Box justify="center" align="center">
-          {tokenData ? (
-            <>
-              <Text size={"3xl"} margin={"medium"}>
-                {tokenData.title}
-              </Text>
-              <Box padding={"medium"}>
-                <Image fit="cover" src={tokenData.image} />
-              </Box>
-            </>
-          ) : (
-            <Loading />
-          )}
-        </Box>
-        <Box direction="row" justify="center" pad={"small"}>
-          <Button
-            primary
-            label="Photocopy"
-            // onClick={mintToken}
-            margin={"small"}
-          />
-          <Button
-            primary
-            label="Cancel"
-            onClick={() => setShowMintingModal(false)}
-            margin={"small"}
-          />
-        </Box>
-      </Box>
-    </Layer>
-  )
-}
 
 export const App = () => {
   const [openseaUrl, setOpenseaUrl] = useState(boredApeUrl)
@@ -78,27 +32,19 @@ export const App = () => {
         `https://api.opensea.io/api/v1/asset/${contractaddress}/${tokenId}/?include_orders=false`
       )
         .then((res) => res.json())
-        .then(({ name, image_url }) => {
-          setTokenData({
-            title: name,
-            image: image_url,
-          })
+        .then((data) => {
+          setTokenData(data)
         })
     }
   }, [showMintingModal])
-
-  const mintToken = () => {
-    //
-  }
 
   return (
     <Box fill={true} background="dark-1" align="center" justify="center">
       <Box width={"50%"} align="center" justify="center">
         {showMintingModal && (
-          <Modal
+          <PreviewModal
             setShowMintingModal={setShowMintingModal}
             tokenData={tokenData}
-            mintToken={tokenData}
           />
         )}
         <Text size={"4xl"} margin={"medium"}>
@@ -120,7 +66,10 @@ export const App = () => {
           primary
           label="Start"
           disabled={!isUrlValid}
-          onClick={() => setShowMintingModal(true)}
+          onClick={() => {
+            setTokenData()
+            setShowMintingModal(true)
+          }}
         />
       </Box>
     </Box>
