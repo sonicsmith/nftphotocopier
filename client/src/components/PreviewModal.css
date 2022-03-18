@@ -1,5 +1,5 @@
-.copying {
-  animation: blinker 2s linear infinite;
+.effect {
+  animation: blinker 1s linear infinite;
 }
 
 @keyframes blinker {

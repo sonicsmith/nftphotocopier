@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { Box, Button, Text, TextInput } from "grommet"
 import PreviewModal from "./components/PreviewModal"
-// import NFTPhotocopierContract from "./contracts/NFTPhotocopier.json"
-// import getWeb3 from "./getWeb3"
+import "./App.css"
 
 const boredApeUrl =
   "https://opensea.io/assets/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/1"
@@ -47,12 +46,21 @@ export const App = () => {
             tokenData={tokenData}
           />
         )}
-        <Text size={"4xl"} margin={"medium"}>
+        <Text
+          size={"5xl"}
+          margin={"medium"}
+          textAlign="center"
+          className={"font-face-punk"}
+        >
           NFT Photocopier
         </Text>
-        <Text>Create your own bootleg NFT on Polygon for 5 MATIC</Text>
-        <Text>Once an NFT is photocopied here, it can not be copied again</Text>
-        <Text margin={"small"}>
+        <Text textAlign="center">
+          Create your own bootleg copy of any Ethereum NFT on Polygon.
+        </Text>
+        <Text textAlign="center">
+          Once an NFT is photocopied here, it can not be copied again.
+        </Text>
+        <Text margin={"small"} textAlign="center">
           Enter the Opensea url for any Ethereum NFT below:
         </Text>
         <TextInput

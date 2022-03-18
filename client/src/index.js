@@ -4,6 +4,7 @@ import "./index.css"
 import App from "./App"
 import { Grommet } from "grommet"
 import * as serviceWorker from "./serviceWorker"
+import "./fonts/punkkid.ttf"
 
 const theme = {
   global: {

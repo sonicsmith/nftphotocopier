@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+@font-face {
+  font-family: "punkkid";
+  src: local("punkkid"), url("./fonts/punkkid.ttf") format("truetype");
+  font-weight: bold;
+}

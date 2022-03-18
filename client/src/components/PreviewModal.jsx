@@ -1,11 +1,12 @@
 import React, { useState } from "react"
 import { Box, Button, Image, Layer, Text } from "grommet"
 import { Loading } from "./Loading"
-import generateCopy from "../methods/generateCopy"
+import generateCopy from "../utils/generateCopy"
 import "./PreviewModal.css"
 
 export default ({ setShowMintingModal, tokenData }) => {
-  const [isCopying, setIsCopying] = useState()
+  const [isCopying, setIsCopying] = useState(false)
+
   return (
     <Layer
       onEsc={() => setShowMintingModal(false)}
@@ -32,19 +33,33 @@ export default ({ setShowMintingModal, tokenData }) => {
                 {tokenData.name ||
                   `${tokenData.collection.name} #${tokenData.token_id}`}
               </Text>
-              <Box padding={"medium"} className={isCopying ? "copying" : ""}>
+              <Box className={isCopying ? "effect" : ""}>
                 <Image fit="cover" src={tokenData.image_url} />
               </Box>
             </>
           )}
         </Box>
-        <Box direction="row" justify="center" pad={"small"}>
+        <Box>
+          <Text textAlign="center" margin={"small"}>
+            [Photocopies cost 1 MATIC each]
+          </Text>
+        </Box>
+        <Box direction="row" justify="center">
           <Button
             primary
-            label="Photocopy"
-            onClick={() => generateCopy(tokenData?.token_metadata)}
+            label={isCopying ? "Copying" : "Photocopy"}
+            onClick={async () => {
+              setIsCopying(true)
+              const { res, err } = await generateCopy(tokenData?.token_metadata)
+              if (res) {
+                //
+              } else {
+                //
+              }
+              setIsCopying(false)
+            }}
             margin={"small"}
-            disabled={!tokenData?.token_metadata}
+            disabled={!tokenData?.token_metadata || isCopying}
           />
           <Button
             primary
