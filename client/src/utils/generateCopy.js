@@ -26,13 +26,6 @@ const initialiseWeb3 = async () => {
 }
 
 export default async (tokenURI, { onConfirm, onSuccess, onError }) => {
-  console.log("Making call to mint NFT with", tokenURI)
-  // return new Promise((resolve) => {
-  //   setTimeout(() => {
-  //     resolve({ res: "worked" })
-  //   }, 3000)
-  // })
-
   if (instance === null) {
     await initialiseWeb3()
   }

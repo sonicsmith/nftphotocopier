@@ -74,6 +74,7 @@ contract("NFTPhotocopier token", (accounts) => {
     const final = new BN(endBalance)
     const amountClaimed = final.sub(initial).toString()
     const expected = new BN(TWO_MATIC).sub(creationCost).toString()
+    // assert aproximately
     assert.equal(amountClaimed.length, expected.length)
     assert.equal(amountClaimed.substring(0, 5), expected.substring(0, 5))
   })

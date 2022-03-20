@@ -1,13 +1,19 @@
 import React, { useState } from "react"
-import { Box, Button, Image, Layer, Text, Notification } from "grommet"
+import { Anchor, Box, Button, Image, Layer, Text, Notification } from "grommet"
 import { Loading } from "./Loading"
 import generateCopy from "../utils/generateCopy"
 import "./PreviewModal.css"
+import { CONTRACT_ADDRESS } from "../constants"
+
+const getUrlFromTokenId = (tokenId) => {
+  return `https://opensea.io/assets/matic/${CONTRACT_ADDRESS}/${tokenId}`
+}
 
 export default ({ setShowMintingModal, tokenData }) => {
   const [isCopying, setIsCopying] = useState(false)
   const [isCopyFinished, setIsCopyFinished] = useState(false)
   const [isError, setIsError] = useState(false)
+  const [nftUrl, setNftUrl] = useState("")
 
   return (
     <Layer
@@ -29,22 +35,32 @@ export default ({ setShowMintingModal, tokenData }) => {
               <Text color={"red"}>copying is unavialable at this time..</Text>
             </>
           )}
-          {tokenData && tokenData.token_metadata && (
+          {tokenData && tokenData.token_metadata && !isCopyFinished && (
             <>
-              <Text size={"3xl"} margin={"medium"}>
+              <Text size={"2xl"} margin={"medium"}>
                 {tokenData.name ||
                   `${tokenData.collection.name} #${tokenData.token_id}`}
               </Text>
-              <Box className={isCopying ? "effect" : ""}>
+              <Box className={isCopying ? "effect" : ""} width="80%">
                 <Image fit="cover" src={tokenData.image_url} />
               </Box>
             </>
           )}
         </Box>
         <Box>
-          <Text textAlign="center" margin={"small"}>
-            [Photocopying costs 1 MATIC]
-          </Text>
+          {!isCopyFinished && (
+            <Text textAlign="center" margin={"small"}>
+              [Photocopy charge: 1 MATIC]
+            </Text>
+          )}
+          {nftUrl && (
+            <>
+              <Text textAlign="center" margin={"small"}>
+                View your new NFT here:
+              </Text>
+              <Anchor href={nftUrl} label={"OpenSea"} />
+            </>
+          )}
         </Box>
         <Box direction="row" justify="center">
           <Button
@@ -52,13 +68,18 @@ export default ({ setShowMintingModal, tokenData }) => {
             onClick={async () => {
               await generateCopy(tokenData?.token_metadata, {
                 onConfirm: () => setIsCopying(true),
-                onSuccess: () => setIsCopyFinished(true),
+                onSuccess: ({ events }) => {
+                  const tokenId = events?.Transfer?.returnValues?.tokenId
+                  const url = getUrlFromTokenId(tokenId)
+                  setNftUrl(url)
+                  setIsCopyFinished(true)
+                },
                 onError: () => setIsError(true),
               })
               setIsCopying(false)
             }}
             margin={"small"}
-            disabled={!tokenData?.token_metadata || isCopying}
+            disabled={!tokenData?.token_metadata || isCopying || isCopyFinished}
           />
           <Button
             label="Cancel"
@@ -72,8 +93,10 @@ export default ({ setShowMintingModal, tokenData }) => {
           toast
           status={"normal"}
           title={"Success"}
-          message={"Your NFT has been successfully copied"}
-          onClose={() => setIsCopyFinished(false)}
+          message={
+            "Your NFT has been successfully copied. It is now avaliable in your account."
+          }
+          // onClose={() => setIsCopyFinished(false)}
         />
       )}
       {isError && (
@@ -81,7 +104,9 @@ export default ({ setShowMintingModal, tokenData }) => {
           toast
           status={"critical"}
           title={"Error"}
-          message={"An error occured during copying"}
+          message={
+            "An error occured during copying. (This NFT may have already been copied)"
+          }
           onClose={() => setIsError(false)}
         />
       )}
