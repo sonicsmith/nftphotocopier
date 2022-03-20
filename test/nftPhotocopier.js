@@ -24,6 +24,17 @@ contract("NFTPhotocopier token", (accounts) => {
     assert.equal(newPrice, ONE_MATIC)
   })
 
+  it("Should reject non owner to change cost price", async () => {
+    let error = "No error"
+    await instance.setCopyPrice(ONE_MATIC)
+    try {
+      await instance.setCopyPrice(0, { from: accounts[1] })
+    } catch (e) {
+      error = e.reason
+    }
+    assert.equal(error, "Ownable: caller is not the owner")
+  })
+
   it("Should mint a token with correct owner", async () => {
     await instance.photocopyNft("theTokenURI", {
       value: ONE_MATIC,
@@ -43,14 +54,16 @@ contract("NFTPhotocopier token", (accounts) => {
   })
 
   it("Should reject a mint when TokenURI is taken", async () => {
+    let error = "No error"
     try {
       await instance.photocopyNft("theTokenURI", {
         value: ONE_MATIC,
         from: accounts[1],
       })
     } catch (e) {
-      assert.equal(e.reason, "Copy already exists")
+      error = e.reason
     }
+    assert.equal(error, "Copy already exists")
   })
 
   it("Should claim all contract balance", async () => {
@@ -63,5 +76,15 @@ contract("NFTPhotocopier token", (accounts) => {
     const expected = new BN(TWO_MATIC).sub(creationCost).toString()
     assert.equal(amountClaimed.length, expected.length)
     assert.equal(amountClaimed.substring(0, 5), expected.substring(0, 5))
+  })
+
+  it("Should reject non owner claiming contract balance", async () => {
+    let error = "No error"
+    try {
+      await instance.claimEarnings({ from: accounts[1] })
+    } catch (e) {
+      error = e.reason
+    }
+    assert.equal(error, "Ownable: caller is not the owner")
   })
 })
