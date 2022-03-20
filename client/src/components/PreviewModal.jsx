@@ -37,10 +37,16 @@ export default ({ setShowMintingModal, tokenData }) => {
           )}
           {tokenData && tokenData.token_metadata && !isCopyFinished && (
             <>
-              <Text size={"2xl"} margin={"medium"}>
-                {tokenData.name ||
-                  `${tokenData.collection.name} #${tokenData.token_id}`}
-              </Text>
+              {isCopying ? (
+                <Text size={"2xl"} margin={"medium"}>
+                  Copying...
+                </Text>
+              ) : (
+                <Text size={"2xl"} margin={"medium"}>
+                  {tokenData.name ||
+                    `${tokenData.collection.name} #${tokenData.token_id}`}
+                </Text>
+              )}
               <Box className={isCopying ? "effect" : ""} width="80%">
                 <Image fit="cover" src={tokenData.image_url} />
               </Box>
