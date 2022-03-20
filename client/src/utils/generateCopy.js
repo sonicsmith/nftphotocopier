@@ -25,13 +25,13 @@ const initialiseWeb3 = async () => {
   }
 }
 
-export default async (tokenURI) => {
+export default async (tokenURI, { onConfirm, onSuccess, onError }) => {
   console.log("Making call to mint NFT with", tokenURI)
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ res: "worked" })
-    }, 3000)
-  })
+  // return new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     resolve({ res: "worked" })
+  //   }, 3000)
+  // })
 
   if (instance === null) {
     await initialiseWeb3()
@@ -42,10 +42,20 @@ export default async (tokenURI) => {
   try {
     await instance.methods
       .photocopyNft(tokenURI)
-      .send({ from, value: MINT_CHARGE, gas: 300000 }, (err, res) => {
-        return { err, res }
+      .send({ from, value: MINT_CHARGE, gas: 300000 })
+      .once("transactionHash", (payload) => {
+        console.log("transactionHash", payload)
+        onConfirm(payload)
       })
-  } catch (e) {
-    return { err: e }
+      .on("error", (payload) => {
+        console.log("error", payload)
+        onError(payload)
+      })
+      .then((receipt) => {
+        console.log("Finished", receipt)
+        onSuccess(receipt)
+      })
+  } catch (error) {
+    onError(error)
   }
 }

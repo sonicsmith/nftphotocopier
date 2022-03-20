@@ -1,11 +1,13 @@
 import React, { useState } from "react"
-import { Box, Button, Image, Layer, Text } from "grommet"
+import { Box, Button, Image, Layer, Text, Notification } from "grommet"
 import { Loading } from "./Loading"
 import generateCopy from "../utils/generateCopy"
 import "./PreviewModal.css"
 
 export default ({ setShowMintingModal, tokenData }) => {
   const [isCopying, setIsCopying] = useState(false)
+  const [isCopyFinished, setIsCopyFinished] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   return (
     <Layer
@@ -41,34 +43,48 @@ export default ({ setShowMintingModal, tokenData }) => {
         </Box>
         <Box>
           <Text textAlign="center" margin={"small"}>
-            [Photocopies cost 1 MATIC each]
+            [Photocopying costs 1 MATIC]
           </Text>
         </Box>
         <Box direction="row" justify="center">
           <Button
-            primary
             label={isCopying ? "Copying" : "Photocopy"}
             onClick={async () => {
-              setIsCopying(true)
-              const { res, err } = await generateCopy(tokenData?.token_metadata)
-              if (res) {
-                //
-              } else {
-                //
-              }
+              await generateCopy(tokenData?.token_metadata, {
+                onConfirm: () => setIsCopying(true),
+                onSuccess: () => setIsCopyFinished(true),
+                onError: () => setIsError(true),
+              })
               setIsCopying(false)
             }}
             margin={"small"}
             disabled={!tokenData?.token_metadata || isCopying}
           />
           <Button
-            primary
             label="Cancel"
             onClick={() => setShowMintingModal(false)}
             margin={"small"}
           />
         </Box>
       </Box>
+      {isCopyFinished && (
+        <Notification
+          toast
+          status={"normal"}
+          title={"Success"}
+          message={"Your NFT has been successfully copied"}
+          onClose={() => setIsCopyFinished(false)}
+        />
+      )}
+      {isError && (
+        <Notification
+          toast
+          status={"critical"}
+          title={"Error"}
+          message={"An error occured during copying"}
+          onClose={() => setIsError(false)}
+        />
+      )}
     </Layer>
   )
 }

@@ -2,12 +2,18 @@ const NFTPhotocopier = artifacts.require("NFTPhotocopier")
 const BN = web3.utils.BN
 
 const ONE_MATIC = "1000000000000000000"
+const TWO_MATIC = "2000000000000000000"
 
 let instance
+let creationCost
 
 contract("NFTPhotocopier token", (accounts) => {
   it("Should make first account an owner", async () => {
-    instance = await NFTPhotocopier.deployed()
+    instance = await NFTPhotocopier.new()
+    const receipt = await web3.eth.getTransactionReceipt(
+      instance.transactionHash
+    )
+    creationCost = new BN(receipt.gasUsed)
     const owner = await instance.owner()
     assert.equal(owner, accounts[0])
   })
@@ -54,6 +60,8 @@ contract("NFTPhotocopier token", (accounts) => {
     const initial = new BN(startBalance)
     const final = new BN(endBalance)
     const amountClaimed = final.sub(initial).toString()
-    assert.equal(amountClaimed, "1999914237565298225")
+    const expected = new BN(TWO_MATIC).sub(creationCost).toString()
+    assert.equal(amountClaimed.length, expected.length)
+    assert.equal(amountClaimed.substring(0, 5), expected.substring(0, 5))
   })
 })

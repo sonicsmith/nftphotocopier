@@ -280,7 +280,7 @@ contract NFTPhotocopier is ERC721, ContextMixin, NativeMetaTransaction, Ownable 
 
         require(msg.value >= photocopyCost);
 
-        for (uint i = 1; i < _tokenIds.current(); i++) {
+        for (uint i = 1; i <= _tokenIds.current(); i++) {
             string memory existingURI = tokenURI(i);
             if (compareStrings(originalURI, existingURI)) {
                 revert("Copy already exists");

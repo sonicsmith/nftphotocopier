@@ -15,6 +15,12 @@ const theme = {
       },
     },
   },
+  button: {
+    border: {
+      radius: "8px",
+      // color: "rgb(50,50,238)",
+    },
+  },
 }
 
 ReactDOM.render(

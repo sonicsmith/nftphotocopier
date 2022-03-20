@@ -71,7 +71,6 @@ export const App = () => {
         />
         <Button
           margin={"medium"}
-          primary
           label="Start"
           disabled={!isUrlValid}
           onClick={() => {
