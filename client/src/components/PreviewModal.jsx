@@ -12,7 +12,7 @@ const getUrlFromTokenId = (tokenId) => {
 export default ({ setShowMintingModal, tokenData }) => {
   const [isCopying, setIsCopying] = useState(false)
   const [isCopyFinished, setIsCopyFinished] = useState(false)
-  const [isError, setIsError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
   const [nftUrl, setNftUrl] = useState("")
 
   return (
@@ -64,7 +64,9 @@ export default ({ setShowMintingModal, tokenData }) => {
               <Text textAlign="center" margin={"small"}>
                 View your new NFT here:
               </Text>
-              <Anchor href={nftUrl} label={"OpenSea"} />
+              <Box justify="center" align="center">
+                <Anchor href={nftUrl} label={"OpenSea"} />
+              </Box>
             </>
           )}
         </Box>
@@ -80,7 +82,7 @@ export default ({ setShowMintingModal, tokenData }) => {
                   setNftUrl(url)
                   setIsCopyFinished(true)
                 },
-                onError: () => setIsError(true),
+                onError: (message) => setErrorMessage(message),
               })
               setIsCopying(false)
             }}
@@ -105,15 +107,13 @@ export default ({ setShowMintingModal, tokenData }) => {
           // onClose={() => setIsCopyFinished(false)}
         />
       )}
-      {isError && (
+      {errorMessage && (
         <Notification
           toast
           status={"critical"}
           title={"Error"}
-          message={
-            "An error occured during copying. (This NFT may have already been copied)"
-          }
-          onClose={() => setIsError(false)}
+          message={errorMessage}
+          onClose={() => setErrorMessage("")}
         />
       )}
     </Layer>

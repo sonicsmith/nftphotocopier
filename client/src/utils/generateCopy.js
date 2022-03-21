@@ -9,25 +9,28 @@ const initialiseWeb3 = async () => {
   try {
     // Get network provider and web3 instance.
     const web3 = getWeb3()
-
     // Get the contract instance.
     const networkId = await web3.eth.net.getId()
     if (String(networkId) !== POLYGON_NETWORK_ID) {
-      alert("Wrong Network")
+      throw new Error("Wrong Network. Switch to Polygon")
     }
     instance = new web3.eth.Contract(ContractJSON.abi, CONTRACT_ADDRESS)
   } catch (error) {
     // Catch any errors for any of the above operations.
-    alert(
+    throw new Error(
       `Failed to load web3, accounts, or contract. Check console for details.`
     )
-    console.error(error)
   }
 }
 
 export default async (tokenURI, { onConfirm, onSuccess, onError }) => {
   if (instance === null) {
-    await initialiseWeb3()
+    try {
+      await initialiseWeb3()
+    } catch (e) {
+      console.error(e)
+      onError(e.message || e)
+    }
   }
 
   const from = instance.givenProvider.selectedAddress
@@ -35,20 +38,25 @@ export default async (tokenURI, { onConfirm, onSuccess, onError }) => {
   try {
     await instance.methods
       .photocopyNft(tokenURI)
-      .send({ from, value: MINT_CHARGE, gas: 300000 })
+      .send({ from, value: MINT_CHARGE })
       .once("transactionHash", (payload) => {
         console.log("transactionHash", payload)
         onConfirm(payload)
       })
       .on("error", (payload) => {
-        console.log("error", payload)
-        onError(payload)
+        console.error("error", payload)
+        onError(
+          "An error occured during copying. (This NFT may have already been copied)"
+        )
       })
       .then((receipt) => {
         console.log("Finished", receipt)
         onSuccess(receipt)
       })
   } catch (error) {
-    onError(error)
+    console.error("error", error)
+    onError(
+      "An error occured during copying. (This NFT may have already been copied)"
+    )
   }
 }
