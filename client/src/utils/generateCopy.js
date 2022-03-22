@@ -4,11 +4,12 @@ import ContractJSON from "../contracts/NFTPhotocopier.json"
 import { CONTRACT_ADDRESS, MINT_CHARGE, POLYGON_NETWORK_ID } from "../constants"
 
 let instance = null
+let web3 = null
 
 const initialiseWeb3 = async () => {
   try {
     // Get network provider and web3 instance.
-    const web3 = getWeb3()
+    web3 = getWeb3()
     // Get the contract instance.
     const networkId = await web3.eth.net.getId()
     if (String(networkId) !== POLYGON_NETWORK_ID) {
@@ -34,11 +35,12 @@ export default async (tokenURI, { onConfirm, onSuccess, onError }) => {
   }
 
   const from = instance.givenProvider.selectedAddress
+  const maxFeePerGas = web3.utils.toHex(web3.utils.toWei("35", "gwei"))
 
   try {
     await instance.methods
       .photocopyNft(tokenURI)
-      .send({ from, value: MINT_CHARGE })
+      .send({ from, value: MINT_CHARGE, maxFeePerGas })
       .once("transactionHash", (payload) => {
         console.log("transactionHash", payload)
         onConfirm(payload)
