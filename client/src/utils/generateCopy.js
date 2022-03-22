@@ -53,6 +53,13 @@ export default async (tokenURI, { onConfirm, onSuccess, onError }) => {
       })
       .then((receipt) => {
         console.log("Finished", receipt)
+        const url = `https://api.opensea.io/api/v1/asset/matic`
+        const tokenId = receipt.events?.Transfer?.returnValues?.tokenId
+        try {
+          fetch(`${url}/${CONTRACT_ADDRESS}/${tokenId}/?force_update=true`)
+        } catch (e) {
+          console.error(e)
+        }
         onSuccess(receipt)
       })
   } catch (error) {

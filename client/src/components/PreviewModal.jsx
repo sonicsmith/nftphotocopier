@@ -64,6 +64,9 @@ export default ({ setShowMintingModal, tokenData }) => {
               <Text textAlign="center" margin={"small"}>
                 View your new NFT here:
               </Text>
+              <Text textAlign="center" margin={"small"}>
+                (Assets may take a few minutes to refresh)
+              </Text>
               <Box justify="center" align="center">
                 <Anchor href={nftUrl} label={"OpenSea"} />
               </Box>
