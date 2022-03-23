@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Box, Button, Text, TextInput } from "grommet"
+import { Anchor, Box, Button, Text, TextInput } from "grommet"
 import PreviewModal from "./components/PreviewModal"
 import "./App.css"
 
@@ -38,7 +38,12 @@ export const App = () => {
   }, [showMintingModal])
 
   return (
-    <Box fill={true} background="dark-1" align="center" justify="center">
+    <Box
+      fill={true}
+      background={{ image: "url(blur.jpg)", color: "black" }}
+      align="center"
+      justify="center"
+    >
       <Box width={"50%"} align="center" justify="center">
         {showMintingModal && (
           <PreviewModal
@@ -79,6 +84,10 @@ export const App = () => {
           }}
         />
       </Box>
+      <Anchor
+        href={"https://opensea.io/collection/nftphotocopier"}
+        label={"View collection in OpenSea"}
+      />
     </Box>
   )
 }
