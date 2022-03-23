@@ -27,13 +27,19 @@ export const App = () => {
       const urlPieces = openseaUrl.split("/")
       const contractaddress = urlPieces[4]
       const tokenId = urlPieces[5]
-      fetch(
-        `https://api.opensea.io/api/v1/asset/${contractaddress}/${tokenId}/?include_orders=false`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setTokenData(data)
-        })
+      try {
+        fetch(
+          `https://api.opensea.io/api/v1/asset/${contractaddress}/${tokenId}/?include_orders=false`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            setTokenData(data)
+          })
+      } catch (e) {
+        alert(
+          "We are experiencing a high amount of traffic. Please try again later."
+        )
+      }
     }
   }, [showMintingModal])
 
